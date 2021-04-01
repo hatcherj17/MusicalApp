@@ -1,0 +1,5 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(491,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (Project2.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  Source.cpp
+C:\Users\jacob\Group-Assignments\ThetaMusicApp\theta-app\Project2\MyForm.h(1,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Source.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
+  Project2.vcxproj -> C:\Users\jacob\Group-Assignments\ThetaMusicApp\theta-app\Debug\Musical App.exe
