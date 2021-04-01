@@ -1188,7 +1188,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
         exit(0);
     }
     private: System::Void btnPlay_Click(System::Object^ sender, System::EventArgs^ e) {
-
+        //Play Button
     }
     private: System::Void pbC2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran

@@ -7,3 +7,6 @@ C:\Users\jacob\Group-Assignments\Challenges for School\ThetaMusicalApp\theta-app
 C:\Users\jacob\Group-Assignments\ThetaMusicApp\theta-app\Project2\Debug\Project2.vcxprojAssemblyReference.cache
 C:\Users\jacob\Group-Assignments\ThetaMusicApp\theta-app\Project2\Debug\Project2.MyForm.resources
 C:\Users\jacob\Group-Assignments\ThetaMusicApp\theta-app\Project2\Debug\Project2.vcxproj.GenerateResource.cache
+C:\Users\jacob\Desktop\NLP Project\MusicalApp\Project2\Debug\Project2.vcxprojAssemblyReference.cache
+C:\Users\jacob\Desktop\NLP Project\MusicalApp\Project2\Debug\Project2.MyForm.resources
+C:\Users\jacob\Desktop\NLP Project\MusicalApp\Project2\Debug\Project2.vcxproj.GenerateResource.cache
