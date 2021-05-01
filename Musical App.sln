@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Musical App", "Project2\Project2.vcxproj", "{95D907FB-0BED-4DD4-A8C2-27A96D595E93}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Musical App Setup", "Musical App Setup\Musical App Setup.vdproj", "{D02923ED-BD20-4A2E-8B49-D590031AA0D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +23,12 @@ Global
 		{95D907FB-0BED-4DD4-A8C2-27A96D595E93}.Release|x64.Build.0 = Release|x64
 		{95D907FB-0BED-4DD4-A8C2-27A96D595E93}.Release|x86.ActiveCfg = Release|Win32
 		{95D907FB-0BED-4DD4-A8C2-27A96D595E93}.Release|x86.Build.0 = Release|Win32
+		{D02923ED-BD20-4A2E-8B49-D590031AA0D8}.Debug|x64.ActiveCfg = Debug
+		{D02923ED-BD20-4A2E-8B49-D590031AA0D8}.Debug|x86.ActiveCfg = Debug
+		{D02923ED-BD20-4A2E-8B49-D590031AA0D8}.Debug|x86.Build.0 = Debug
+		{D02923ED-BD20-4A2E-8B49-D590031AA0D8}.Release|x64.ActiveCfg = Release
+		{D02923ED-BD20-4A2E-8B49-D590031AA0D8}.Release|x86.ActiveCfg = Release
+		{D02923ED-BD20-4A2E-8B49-D590031AA0D8}.Release|x86.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

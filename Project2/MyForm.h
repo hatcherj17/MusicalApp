@@ -1,28 +1,46 @@
-#include <iostream>;
+#include <iostream>
+#include <Windows.h>
+#include <msclr\marshal_cppstd.h>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <map>
+
 #pragma once
 
 namespace Project2 {
 
-	using namespace System;
-	using namespace System::ComponentModel;
-	using namespace System::Collections;
-	using namespace System::Windows::Forms;
-	using namespace System::Data;
-	using namespace System::Drawing;
+    using namespace System;
+    using namespace System::Threading;
+    using namespace System::ComponentModel;
+    using namespace System::Collections;
+    using namespace System::Windows::Forms;
+    using namespace System::Data;
+    using namespace System::Drawing;
+    using namespace System::IO;
 
-	/// <summary>
-	/// Summary for MyForm
-	/// </summary>
+    /// <summary>
+    /// Summary for MyForm
+    /// </summary>
     public ref class MyForm : public System::Windows::Forms::Form
     {
     public:
         MyForm(void)
         {
             InitializeComponent();
-            //
-            //TODO: Add the constructor code here
-            //
         }
+
+
+    public: void initialize();
+    public: void setInstrument(int);
+    public: void setVolume(int);
+    public: void noteOn(int);
+    public: void noteOff(int);
+    private: System::Windows::Forms::Button^ btnSetNoteTime;
+    private: System::Windows::Forms::ToolStripMenuItem^ saveNotesPlayedToolStripMenuItem;
+    private: System::Windows::Forms::Button^ btnReset;
+    public:
+    public: int noteTime = 500;
 
     protected:
         /// <summary>
@@ -38,19 +56,18 @@ namespace Project2 {
     private: System::Windows::Forms::Button^ btnPlay;
     private: System::Windows::Forms::MenuStrip^ menuStrip;
 
-
+    protected:
     private: System::Windows::Forms::ToolStripMenuItem^ fIleToolStripMenuItem;
     private: System::Windows::Forms::ToolStripMenuItem^ exitToolStripMenuItem;
-
     private: System::Windows::Forms::ToolStripMenuItem^ settingsToolStripMenuItem;
     private: System::Windows::Forms::ToolStripMenuItem^ openFromFileToolStripMenuItem;
-    private: System::Windows::Forms::ToolStripMenuItem^ convertToMidiToolStripMenuItem;
+
     private: System::Windows::Forms::ToolStripMenuItem^ aboutToolStripMenuItem;
     private: System::Windows::Forms::Label^ lblNPStatic;
-    private: System::Windows::Forms::Label^ lblBPMStatic;
-    private: System::Windows::Forms::CheckBox^ cbRepeat;
-    private: System::Windows::Forms::TextBox^ txtBoxBPM;
-    private: System::Windows::Forms::Button^ btnStop;
+
+
+
+
     private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel1;
     private: System::Windows::Forms::PictureBox^ pbB1;
 
@@ -78,26 +95,16 @@ namespace Project2 {
 
     private: System::Windows::Forms::PictureBox^ pbC3;
     private: System::Windows::Forms::PictureBox^ pbA3;
-
-
     private: System::Windows::Forms::PictureBox^ pbG3;
 
     private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel3;
     private: System::Windows::Forms::PictureBox^ pbB2;
-
-
     private: System::Windows::Forms::PictureBox^ pbF2;
-
     private: System::Windows::Forms::PictureBox^ pbE2;
-
     private: System::Windows::Forms::PictureBox^ pbD2;
-
     private: System::Windows::Forms::PictureBox^ pbC2;
     private: System::Windows::Forms::PictureBox^ pbA2;
-
-
     private: System::Windows::Forms::PictureBox^ pbG2;
-
     private: System::Windows::Forms::TableLayoutPanel^ tableLayoutPanel5;
     private: System::Windows::Forms::Button^ btnCSharp1;
 
@@ -118,9 +125,9 @@ namespace Project2 {
     private: System::Windows::Forms::ComboBox^ comboBox1;
     private: System::Windows::Forms::Label^ lblInstrament;
     private: System::Windows::Forms::Label^ lblNotesPlayedDynamic;
-private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
-
-
+    private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
+    private: System::Windows::Forms::Label^ lblNoteLength;
+    private: System::Windows::Forms::TextBox^ txtBoxNoteLength;
 
     protected:
 
@@ -144,13 +151,9 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
             this->settingsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
             this->openFromFileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-            this->convertToMidiToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+            this->saveNotesPlayedToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
             this->aboutToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
             this->lblNPStatic = (gcnew System::Windows::Forms::Label());
-            this->lblBPMStatic = (gcnew System::Windows::Forms::Label());
-            this->cbRepeat = (gcnew System::Windows::Forms::CheckBox());
-            this->txtBoxBPM = (gcnew System::Windows::Forms::TextBox());
-            this->btnStop = (gcnew System::Windows::Forms::Button());
             this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
             this->pbB1 = (gcnew System::Windows::Forms::PictureBox());
             this->pbF1 = (gcnew System::Windows::Forms::PictureBox());
@@ -177,6 +180,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbA2 = (gcnew System::Windows::Forms::PictureBox());
             this->pbG2 = (gcnew System::Windows::Forms::PictureBox());
             this->tableLayoutPanel5 = (gcnew System::Windows::Forms::TableLayoutPanel());
+            this->btnReset = (gcnew System::Windows::Forms::Button());
             this->btnCSharp1 = (gcnew System::Windows::Forms::Button());
             this->btnDSharp1 = (gcnew System::Windows::Forms::Button());
             this->btnFSharp1 = (gcnew System::Windows::Forms::Button());
@@ -196,6 +200,9 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->lblInstrament = (gcnew System::Windows::Forms::Label());
             this->lblNotesPlayedDynamic = (gcnew System::Windows::Forms::Label());
             this->txtBoxNotesPlayed = (gcnew System::Windows::Forms::TextBox());
+            this->lblNoteLength = (gcnew System::Windows::Forms::Label());
+            this->txtBoxNoteLength = (gcnew System::Windows::Forms::TextBox());
+            this->btnSetNoteTime = (gcnew System::Windows::Forms::Button());
             this->menuStrip->SuspendLayout();
             this->tableLayoutPanel1->SuspendLayout();
             (cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pbB1))->BeginInit();
@@ -268,7 +275,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             // 
             this->settingsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
                 this->openFromFileToolStripMenuItem,
-                    this->convertToMidiToolStripMenuItem
+                    this->saveNotesPlayedToolStripMenuItem
             });
             this->settingsToolStripMenuItem->Name = L"settingsToolStripMenuItem";
             this->settingsToolStripMenuItem->Size = System::Drawing::Size(61, 20);
@@ -277,14 +284,16 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             // openFromFileToolStripMenuItem
             // 
             this->openFromFileToolStripMenuItem->Name = L"openFromFileToolStripMenuItem";
-            this->openFromFileToolStripMenuItem->Size = System::Drawing::Size(157, 22);
+            this->openFromFileToolStripMenuItem->Size = System::Drawing::Size(170, 22);
             this->openFromFileToolStripMenuItem->Text = L"Open from File";
+            this->openFromFileToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::openFromFileToolStripMenuItem_Click);
             // 
-            // convertToMidiToolStripMenuItem
+            // saveNotesPlayedToolStripMenuItem
             // 
-            this->convertToMidiToolStripMenuItem->Name = L"convertToMidiToolStripMenuItem";
-            this->convertToMidiToolStripMenuItem->Size = System::Drawing::Size(157, 22);
-            this->convertToMidiToolStripMenuItem->Text = L"Convert to Midi";
+            this->saveNotesPlayedToolStripMenuItem->Name = L"saveNotesPlayedToolStripMenuItem";
+            this->saveNotesPlayedToolStripMenuItem->Size = System::Drawing::Size(170, 22);
+            this->saveNotesPlayedToolStripMenuItem->Text = L"Save Notes Played";
+            this->saveNotesPlayedToolStripMenuItem->Click += gcnew System::EventHandler(this, &MyForm::saveNotesPlayedToolStripMenuItem_Click);
             // 
             // aboutToolStripMenuItem
             // 
@@ -304,53 +313,6 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->lblNPStatic->Size = System::Drawing::Size(132, 25);
             this->lblNPStatic->TabIndex = 3;
             this->lblNPStatic->Text = L"Notes played:";
-            // 
-            // lblBPMStatic
-            // 
-            this->lblBPMStatic->AutoSize = true;
-            this->lblBPMStatic->BackColor = System::Drawing::Color::Transparent;
-            this->lblBPMStatic->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(0)));
-            this->lblBPMStatic->Location = System::Drawing::Point(814, 462);
-            this->lblBPMStatic->Name = L"lblBPMStatic";
-            this->lblBPMStatic->Size = System::Drawing::Size(164, 25);
-            this->lblBPMStatic->TabIndex = 4;
-            this->lblBPMStatic->Text = L"Beats per minute:";
-            // 
-            // cbRepeat
-            // 
-            this->cbRepeat->AutoSize = true;
-            this->cbRepeat->BackColor = System::Drawing::Color::Transparent;
-            this->cbRepeat->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(0)));
-            this->cbRepeat->Location = System::Drawing::Point(722, 461);
-            this->cbRepeat->Name = L"cbRepeat";
-            this->cbRepeat->Size = System::Drawing::Size(93, 29);
-            this->cbRepeat->TabIndex = 5;
-            this->cbRepeat->Text = L"Repeat";
-            this->cbRepeat->UseVisualStyleBackColor = false;
-            // 
-            // txtBoxBPM
-            // 
-            this->txtBoxBPM->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 15, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-                static_cast<System::Byte>(0)));
-            this->txtBoxBPM->Location = System::Drawing::Point(984, 459);
-            this->txtBoxBPM->Name = L"txtBoxBPM";
-            this->txtBoxBPM->Size = System::Drawing::Size(36, 30);
-            this->txtBoxBPM->TabIndex = 6;
-            // 
-            // btnStop
-            // 
-            this->btnStop->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
-                | System::Windows::Forms::AnchorStyles::Left)
-                | System::Windows::Forms::AnchorStyles::Right));
-            this->btnStop->Location = System::Drawing::Point(158, 3);
-            this->btnStop->Name = L"btnStop";
-            this->btnStop->Size = System::Drawing::Size(145, 57);
-            this->btnStop->TabIndex = 7;
-            this->btnStop->Text = L"Stop";
-            this->btnStop->UseVisualStyleBackColor = true;
-            this->btnStop->Click += gcnew System::EventHandler(this, &MyForm::btnStop_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -383,7 +345,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->tableLayoutPanel1->Name = L"tableLayoutPanel1";
             this->tableLayoutPanel1->RowCount = 1;
             this->tableLayoutPanel1->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-            this->tableLayoutPanel1->Size = System::Drawing::Size(335, 373);
+            this->tableLayoutPanel1->Size = System::Drawing::Size(335, 379);
             this->tableLayoutPanel1->TabIndex = 29;
             // 
             // pbB1
@@ -396,7 +358,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbB1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbB1.Image")));
             this->pbB1->Location = System::Drawing::Point(285, 3);
             this->pbB1->Name = L"pbB1";
-            this->pbB1->Size = System::Drawing::Size(47, 367);
+            this->pbB1->Size = System::Drawing::Size(47, 375);
             this->pbB1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbB1->TabIndex = 35;
             this->pbB1->TabStop = false;
@@ -412,7 +374,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbF1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbF1.Image")));
             this->pbF1->Location = System::Drawing::Point(144, 3);
             this->pbF1->Name = L"pbF1";
-            this->pbF1->Size = System::Drawing::Size(41, 367);
+            this->pbF1->Size = System::Drawing::Size(41, 375);
             this->pbF1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbF1->TabIndex = 32;
             this->pbF1->TabStop = false;
@@ -428,7 +390,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbE1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbE1.Image")));
             this->pbE1->Location = System::Drawing::Point(97, 3);
             this->pbE1->Name = L"pbE1";
-            this->pbE1->Size = System::Drawing::Size(41, 367);
+            this->pbE1->Size = System::Drawing::Size(41, 375);
             this->pbE1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbE1->TabIndex = 31;
             this->pbE1->TabStop = false;
@@ -444,7 +406,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbD1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbD1.Image")));
             this->pbD1->Location = System::Drawing::Point(50, 3);
             this->pbD1->Name = L"pbD1";
-            this->pbD1->Size = System::Drawing::Size(41, 367);
+            this->pbD1->Size = System::Drawing::Size(41, 375);
             this->pbD1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbD1->TabIndex = 30;
             this->pbD1->TabStop = false;
@@ -460,7 +422,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbC1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbC1.Image")));
             this->pbC1->Location = System::Drawing::Point(3, 3);
             this->pbC1->Name = L"pbC1";
-            this->pbC1->Size = System::Drawing::Size(41, 367);
+            this->pbC1->Size = System::Drawing::Size(41, 375);
             this->pbC1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbC1->TabIndex = 30;
             this->pbC1->TabStop = false;
@@ -476,7 +438,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbA1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbA1.Image")));
             this->pbA1->Location = System::Drawing::Point(238, 3);
             this->pbA1->Name = L"pbA1";
-            this->pbA1->Size = System::Drawing::Size(41, 367);
+            this->pbA1->Size = System::Drawing::Size(41, 375);
             this->pbA1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbA1->TabIndex = 34;
             this->pbA1->TabStop = false;
@@ -492,7 +454,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbG1->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbG1.Image")));
             this->pbG1->Location = System::Drawing::Point(191, 3);
             this->pbG1->Name = L"pbG1";
-            this->pbG1->Size = System::Drawing::Size(41, 367);
+            this->pbG1->Size = System::Drawing::Size(41, 375);
             this->pbG1->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbG1->TabIndex = 33;
             this->pbG1->TabStop = false;
@@ -518,7 +480,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->tableLayoutPanel2->Name = L"tableLayoutPanel2";
             this->tableLayoutPanel2->RowCount = 1;
             this->tableLayoutPanel2->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, 100)));
-            this->tableLayoutPanel2->Size = System::Drawing::Size(1023, 379);
+            this->tableLayoutPanel2->Size = System::Drawing::Size(1023, 385);
             this->tableLayoutPanel2->TabIndex = 30;
             // 
             // tableLayoutPanel4
@@ -552,7 +514,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->tableLayoutPanel4->Name = L"tableLayoutPanel4";
             this->tableLayoutPanel4->RowCount = 1;
             this->tableLayoutPanel4->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-            this->tableLayoutPanel4->Size = System::Drawing::Size(335, 373);
+            this->tableLayoutPanel4->Size = System::Drawing::Size(335, 379);
             this->tableLayoutPanel4->TabIndex = 31;
             // 
             // pbB3
@@ -565,7 +527,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbB3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbB3.Image")));
             this->pbB3->Location = System::Drawing::Point(285, 3);
             this->pbB3->Name = L"pbB3";
-            this->pbB3->Size = System::Drawing::Size(47, 367);
+            this->pbB3->Size = System::Drawing::Size(47, 375);
             this->pbB3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbB3->TabIndex = 35;
             this->pbB3->TabStop = false;
@@ -581,7 +543,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbF3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbF3.Image")));
             this->pbF3->Location = System::Drawing::Point(144, 3);
             this->pbF3->Name = L"pbF3";
-            this->pbF3->Size = System::Drawing::Size(41, 367);
+            this->pbF3->Size = System::Drawing::Size(41, 375);
             this->pbF3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbF3->TabIndex = 32;
             this->pbF3->TabStop = false;
@@ -597,7 +559,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbE3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbE3.Image")));
             this->pbE3->Location = System::Drawing::Point(97, 3);
             this->pbE3->Name = L"pbE3";
-            this->pbE3->Size = System::Drawing::Size(41, 367);
+            this->pbE3->Size = System::Drawing::Size(41, 375);
             this->pbE3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbE3->TabIndex = 31;
             this->pbE3->TabStop = false;
@@ -613,7 +575,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbD3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbD3.Image")));
             this->pbD3->Location = System::Drawing::Point(50, 3);
             this->pbD3->Name = L"pbD3";
-            this->pbD3->Size = System::Drawing::Size(41, 367);
+            this->pbD3->Size = System::Drawing::Size(41, 375);
             this->pbD3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbD3->TabIndex = 30;
             this->pbD3->TabStop = false;
@@ -629,7 +591,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbC3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbC3.Image")));
             this->pbC3->Location = System::Drawing::Point(3, 3);
             this->pbC3->Name = L"pbC3";
-            this->pbC3->Size = System::Drawing::Size(41, 367);
+            this->pbC3->Size = System::Drawing::Size(41, 375);
             this->pbC3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbC3->TabIndex = 30;
             this->pbC3->TabStop = false;
@@ -645,7 +607,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbA3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbA3.Image")));
             this->pbA3->Location = System::Drawing::Point(238, 3);
             this->pbA3->Name = L"pbA3";
-            this->pbA3->Size = System::Drawing::Size(41, 367);
+            this->pbA3->Size = System::Drawing::Size(41, 375);
             this->pbA3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbA3->TabIndex = 34;
             this->pbA3->TabStop = false;
@@ -661,7 +623,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbG3->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbG3.Image")));
             this->pbG3->Location = System::Drawing::Point(191, 3);
             this->pbG3->Name = L"pbG3";
-            this->pbG3->Size = System::Drawing::Size(41, 367);
+            this->pbG3->Size = System::Drawing::Size(41, 375);
             this->pbG3->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbG3->TabIndex = 33;
             this->pbG3->TabStop = false;
@@ -698,7 +660,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->tableLayoutPanel3->Name = L"tableLayoutPanel3";
             this->tableLayoutPanel3->RowCount = 1;
             this->tableLayoutPanel3->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-            this->tableLayoutPanel3->Size = System::Drawing::Size(335, 373);
+            this->tableLayoutPanel3->Size = System::Drawing::Size(335, 379);
             this->tableLayoutPanel3->TabIndex = 30;
             // 
             // pbB2
@@ -711,7 +673,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbB2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbB2.Image")));
             this->pbB2->Location = System::Drawing::Point(285, 3);
             this->pbB2->Name = L"pbB2";
-            this->pbB2->Size = System::Drawing::Size(47, 367);
+            this->pbB2->Size = System::Drawing::Size(47, 375);
             this->pbB2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbB2->TabIndex = 35;
             this->pbB2->TabStop = false;
@@ -727,7 +689,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbF2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbF2.Image")));
             this->pbF2->Location = System::Drawing::Point(144, 3);
             this->pbF2->Name = L"pbF2";
-            this->pbF2->Size = System::Drawing::Size(41, 367);
+            this->pbF2->Size = System::Drawing::Size(41, 375);
             this->pbF2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbF2->TabIndex = 32;
             this->pbF2->TabStop = false;
@@ -743,7 +705,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbE2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbE2.Image")));
             this->pbE2->Location = System::Drawing::Point(97, 3);
             this->pbE2->Name = L"pbE2";
-            this->pbE2->Size = System::Drawing::Size(41, 367);
+            this->pbE2->Size = System::Drawing::Size(41, 375);
             this->pbE2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbE2->TabIndex = 31;
             this->pbE2->TabStop = false;
@@ -759,7 +721,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbD2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbD2.Image")));
             this->pbD2->Location = System::Drawing::Point(50, 3);
             this->pbD2->Name = L"pbD2";
-            this->pbD2->Size = System::Drawing::Size(41, 367);
+            this->pbD2->Size = System::Drawing::Size(41, 375);
             this->pbD2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbD2->TabIndex = 30;
             this->pbD2->TabStop = false;
@@ -775,7 +737,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbC2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbC2.Image")));
             this->pbC2->Location = System::Drawing::Point(3, 3);
             this->pbC2->Name = L"pbC2";
-            this->pbC2->Size = System::Drawing::Size(41, 367);
+            this->pbC2->Size = System::Drawing::Size(41, 375);
             this->pbC2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbC2->TabIndex = 30;
             this->pbC2->TabStop = false;
@@ -791,7 +753,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbA2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbA2.Image")));
             this->pbA2->Location = System::Drawing::Point(238, 3);
             this->pbA2->Name = L"pbA2";
-            this->pbA2->Size = System::Drawing::Size(41, 367);
+            this->pbA2->Size = System::Drawing::Size(41, 375);
             this->pbA2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbA2->TabIndex = 34;
             this->pbA2->TabStop = false;
@@ -807,7 +769,7 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->pbG2->Image = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"pbG2.Image")));
             this->pbG2->Location = System::Drawing::Point(191, 3);
             this->pbG2->Name = L"pbG2";
-            this->pbG2->Size = System::Drawing::Size(41, 367);
+            this->pbG2->Size = System::Drawing::Size(41, 375);
             this->pbG2->SizeMode = System::Windows::Forms::PictureBoxSizeMode::StretchImage;
             this->pbG2->TabIndex = 33;
             this->pbG2->TabStop = false;
@@ -819,14 +781,27 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->tableLayoutPanel5->ColumnCount = 2;
             this->tableLayoutPanel5->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle()));
             this->tableLayoutPanel5->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle()));
+            this->tableLayoutPanel5->Controls->Add(this->btnReset, 1, 0);
             this->tableLayoutPanel5->Controls->Add(this->btnPlay, 0, 0);
-            this->tableLayoutPanel5->Controls->Add(this->btnStop, 1, 0);
-            this->tableLayoutPanel5->Location = System::Drawing::Point(721, 501);
+            this->tableLayoutPanel5->Location = System::Drawing::Point(721, 505);
             this->tableLayoutPanel5->Name = L"tableLayoutPanel5";
             this->tableLayoutPanel5->RowCount = 1;
             this->tableLayoutPanel5->RowStyles->Add((gcnew System::Windows::Forms::RowStyle()));
-            this->tableLayoutPanel5->Size = System::Drawing::Size(306, 63);
+            this->tableLayoutPanel5->Size = System::Drawing::Size(304, 63);
             this->tableLayoutPanel5->TabIndex = 31;
+            // 
+            // btnReset
+            // 
+            this->btnReset->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Bottom)
+                | System::Windows::Forms::AnchorStyles::Left)
+                | System::Windows::Forms::AnchorStyles::Right));
+            this->btnReset->Location = System::Drawing::Point(158, 3);
+            this->btnReset->Name = L"btnReset";
+            this->btnReset->Size = System::Drawing::Size(147, 57);
+            this->btnReset->TabIndex = 54;
+            this->btnReset->Text = L"Reset";
+            this->btnReset->UseVisualStyleBackColor = true;
+            this->btnReset->Click += gcnew System::EventHandler(this, &MyForm::btnReset_Click);
             // 
             // btnCSharp1
             // 
@@ -1012,29 +987,39 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             // 
             this->comboBox1->FormattingEnabled = true;
             this->comboBox1->Items->AddRange(gcnew cli::array< System::Object^  >(128) {
-                L"Accordion", L"Acoustic Bass", L"Acoustic Grand Piano",
-                    L"Acoustic Guit Nylon", L"Acoustic Guit Steel", L"Agogo", L"Alto Sax", L"Applause", L"Bagpipe", L"Banjo", L"Baritone Sax", L"Bassoon",
-                    L"Bird Tweet", L"Blown Bottle", L"Brass Section", L"Breath Noise", L"Bright Acoustic Piano", L"Celesta", L"Cello", L"Choir Aahs",
-                    L"Church Organ", L"Clarinet", L"Clavi", L"Contrabass", L"Distortion Guitar", L"Drawbar Organ", L"Dulcimer", L"Electric Bass Finger",
-                    L"Electric Bass Pick", L"Electric Grand Piano", L"Electric Guit Muted", L"Electric Guitar Clean", L"Electric Guitar Jazz", L"Electric Piano 1",
-                    L"Electric Piano 2", L"English Horn", L"FX 1 Rain", L"FX 2 Soundtrack", L"FX 3 Crystal", L"FX 4 Atmosphere", L"FX 5 Brightness",
-                    L"FX 6 Goblins", L"FX 7 Echoes", L"FX 8 Sci-Fi", L"Fiddle", L"Flute", L"French Horn", L"Fretless Bass", L"Glockenspiel", L"Guitar Fret Noise",
-                    L"Guitar Harmonics", L"Gunshotn", L"Harmonica", L"Harpsichord", L"Helicopter", L"Honky-Tonk Piano", L"Kalimba", L"Koto", L"Lead 1 Square",
-                    L"Lead 2 Sawtooth", L"Lead 3 Calliope", L"Lead 4 Chiff", L"Lead 5 Charang", L"Lead 6 Voice", L"Lead 7 Fifths", L"Lead 8 Bass + Lead",
-                    L"Marimba", L"Melodic Tom", L"Music Box", L"Muted Trumpet", L"Oboe", L"Ocarina", L"Orchestra Hit", L"Orchestral Harp", L"Overdriven Guitar",
-                    L"Pad 1 New Age", L"Pad 2 Warm", L"Pad 3 Polysynth", L"Pad 4 Choir", L"Pad 5 Bowed", L"Pad 6 Metallic", L"Pad 7 Halo", L"Pad 8 Sweep",
-                    L"Pan Flute", L"Percussive Organ", L"Piccolo", L"Pizzicato Strings", L"Recorder", L"Reed Organ", L"Reverse Cymbal", L"Rock Organ",
-                    L"Seashore", L"Shakuhachi", L"Shamisen", L"Shanai", L"Sitar", L"Slap Bass 1", L"Slap Bass 2", L"Soprano Sax", L"Steel Drums",
-                    L"String Ensemble 1", L"String Ensemble 2", L"Synth Bass 1", L"Synth Bass 2", L"Synth Brass 1", L"Synth Brass 2", L"Synth Drum",
-                    L"Synth Strings 1", L"Synth Strings 2", L"Synth Voice", L"Taiko Drum", L"Tango Accordion", L"Telephone Ring", L"Tenor Sax", L"Timpani",
-                    L"Tinkle Bell", L"Tremolo Strings", L"Trombone", L"Trumpet", L"Tuba", L"Tubular Bells", L"Vibraphone", L"Viola", L"Violin", L"Voice Oohs",
-                    L"Whistle", L"Woodblock", L"Xylophone"
+                L"0:Acoustic Grand Piano  ", L"1:Bright Acoustic Piano ",
+                    L"2:Electric Grand Piano  ", L"3:Honky-Tonk Piano ", L"4:Electric Piano 1      ", L"5:Electric Piano 2      ", L"6:Harpsichord           ",
+                    L"7:Clavi ", L"8:Celesta               ", L"9:Glockenspiel          ", L"10:Music Box            ", L"11:Vibraphone ", L"12:Marimba              ",
+                    L"13:Xylophone            ", L"14:Tubular Bells        ", L"15:Dulcimer ", L"16:Drawbar Organ        ", L"17:Percussive Organ     ",
+                    L"18:Rock Organ           ", L"19:Church Organ ", L"20:Reed Organ           ", L"21:Accordion            ", L"22:Harmonica            ",
+                    L"23:Tango Accordion ", L"24:Acoustic Guit Nylon  ", L"25:Acoustic Guit Steel  ", L"26:Electric Guitar Jazz ", L"27:Electric Guitar Clean ",
+                    L"28:Electric Guit Muted  ", L"29:Overdriven Guitar    ", L"30:Distortion Guitar    ", L"31:Guitar Harmonics ", L"32:Acoustic Bass        ",
+                    L"33:Electric Bass Finger ", L"34:Electric Bass Pick   ", L"35:Fretless Bass ", L"36:Slap Bass 1          ", L"37:Slap Bass 2          ",
+                    L"38:Synth Bass 1         ", L"39:Synth Bass 2 ", L"40:Violin               ", L"41:Viola                ", L"42:Cello                ",
+                    L"43:Contrabass ", L"44:Tremolo Strings      ", L"45:Pizzicato Strings    ", L"46:Orchestral Harp     ", L"47:Timpani ", L"48:String Ensemble 1    ",
+                    L"49:String Ensemble 2    ", L"50:Synth Strings 1      ", L"51:Synth Strings 2 ", L"52:Choir Aahs           ", L"53:Voice Oohs           ",
+                    L"54:Synth Voice          ", L"55:Orchestra Hit", L"56:Trumpet              ", L"57:Trombone             ", L"58:Tuba                 ",
+                    L"59:Muted Trumpet", L"60:French Horn          ", L"61:Brass Section        ", L"62:Synth Brass 1        ", L"63:Synth Brass 2",
+                    L"64:Soprano Sax          ", L"65:Alto Sax             ", L"66:Tenor Sax            ", L"67:Baritone Sax", L"68:Oboe                 ",
+                    L"69:English Horn         ", L"70:Bassoon              ", L"71:Clarinet", L"72:Piccolo              ", L"73:Flute                ",
+                    L"74:Recorder             ", L"75:Pan Flute", L"76:Blown Bottle         ", L"77:Shakuhachi           ", L"78:Whistle             ",
+                    L"79:Ocarina", L"80:Lead 1 Square        ", L"81:Lead 2 Sawtooth      ", L"82:Lead 3 Calliope      ", L"83:Lead 4 Chiff", L"84:Lead 5 Charang       ",
+                    L"85:Lead 6 Voice         ", L"86:Lead 7 Fifths        ", L"87:Lead 8 Bass + Lead", L"88:Pad 1 New Age        ", L"89:Pad 2 Warm           ",
+                    L"90:Pad 3 Polysynth      ", L"91:Pad 4 Choir ", L"92:Pad 5 Bowed          ", L"93:Pad 6 Metallic       ", L"94:Pad 7 Halo           ",
+                    L"95:Pad 8 Sweep ", L"96:FX 1 Rain            ", L"97:FX 2 Soundtrack      ", L"98:FX 3 Crystal         ", L"99:FX 4 Atmosphere ",
+                    L"100:FX 5 Brightness     ", L"101:FX 6 Goblins        ", L"102:FX 7 Echoes         ", L"103:FX 8 Sci-Fi ", L"104:Sitar               ",
+                    L"105:Banjo               ", L"106:Shamisen            ", L"107:Koto ", L"108:Kalimba             ", L"109:Bagpipe             ",
+                    L"110:Fiddle              ", L"111:Shanai ", L"112:Tinkle Bell         ", L"113:Agogo               ", L"114:Steel Drums        ",
+                    L"115:Woodblock ", L"116:Taiko Drum          ", L"117:Melodic Tom         ", L"118:Synth Drum         ", L"119:Reverse Cymbal ",
+                    L"120:Guitar Fret Noise   ", L"121:Breath Noise        ", L"122:Seashore            ", L"123:Bird Tweet ", L"124:Telephone Ring      ",
+                    L"125:Helicopter          ", L"126:Applause            ", L"127:Gunshot"
             });
             this->comboBox1->Location = System::Drawing::Point(844, 427);
             this->comboBox1->Name = L"comboBox1";
-            this->comboBox1->Size = System::Drawing::Size(154, 21);
+            this->comboBox1->Size = System::Drawing::Size(178, 21);
             this->comboBox1->TabIndex = 47;
-            this->comboBox1->Text = L"Acoustic Grand Piano";
+            this->comboBox1->Text = L"0:Acoustic Grand Piano  ";
+            this->comboBox1->SelectedIndexChanged += gcnew System::EventHandler(this, &MyForm::comboBox1_SelectedIndexChanged);
             // 
             // lblInstrament
             // 
@@ -1061,11 +1046,42 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->txtBoxNotesPlayed->AllowDrop = true;
             this->txtBoxNotesPlayed->Font = (gcnew System::Drawing::Font(L"Courier New", 14.25F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
                 static_cast<System::Byte>(0)));
-            this->txtBoxNotesPlayed->Location = System::Drawing::Point(147, 426);
+            this->txtBoxNotesPlayed->Location = System::Drawing::Point(144, 418);
+            this->txtBoxNotesPlayed->MaxLength = 150;
             this->txtBoxNotesPlayed->Multiline = true;
             this->txtBoxNotesPlayed->Name = L"txtBoxNotesPlayed";
-            this->txtBoxNotesPlayed->Size = System::Drawing::Size(537, 126);
+            this->txtBoxNotesPlayed->ScrollBars = System::Windows::Forms::ScrollBars::Vertical;
+            this->txtBoxNotesPlayed->Size = System::Drawing::Size(568, 152);
             this->txtBoxNotesPlayed->TabIndex = 50;
+            // 
+            // lblNoteLength
+            // 
+            this->lblNoteLength->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+            this->lblNoteLength->AutoSize = true;
+            this->lblNoteLength->Location = System::Drawing::Point(734, 455);
+            this->lblNoteLength->Name = L"lblNoteLength";
+            this->lblNoteLength->Size = System::Drawing::Size(235, 13);
+            this->lblNoteLength->TabIndex = 51;
+            this->lblNoteLength->Text = L"How long should each note play in milliseconds\?";
+            // 
+            // txtBoxNoteLength
+            // 
+            this->txtBoxNoteLength->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Left));
+            this->txtBoxNoteLength->Location = System::Drawing::Point(993, 452);
+            this->txtBoxNoteLength->Name = L"txtBoxNoteLength";
+            this->txtBoxNoteLength->Size = System::Drawing::Size(29, 20);
+            this->txtBoxNoteLength->TabIndex = 52;
+            this->txtBoxNoteLength->Text = L"500";
+            // 
+            // btnSetNoteTime
+            // 
+            this->btnSetNoteTime->Location = System::Drawing::Point(812, 476);
+            this->btnSetNoteTime->Name = L"btnSetNoteTime";
+            this->btnSetNoteTime->Size = System::Drawing::Size(122, 23);
+            this->btnSetNoteTime->TabIndex = 53;
+            this->btnSetNoteTime->Text = L"Set Note Length";
+            this->btnSetNoteTime->UseVisualStyleBackColor = true;
+            this->btnSetNoteTime->Click += gcnew System::EventHandler(this, &MyForm::btnSetNoteTime_Click);
             // 
             // MyForm
             // 
@@ -1073,7 +1089,10 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
             this->AutoSize = true;
             this->AutoSizeMode = System::Windows::Forms::AutoSizeMode::GrowAndShrink;
-            this->ClientSize = System::Drawing::Size(1039, 576);
+            this->ClientSize = System::Drawing::Size(1039, 582);
+            this->Controls->Add(this->btnSetNoteTime);
+            this->Controls->Add(this->txtBoxNoteLength);
+            this->Controls->Add(this->lblNoteLength);
             this->Controls->Add(this->txtBoxNotesPlayed);
             this->Controls->Add(this->lblNotesPlayedDynamic);
             this->Controls->Add(this->lblInstrament);
@@ -1095,11 +1114,9 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
             this->Controls->Add(this->btnCSharp1);
             this->Controls->Add(this->tableLayoutPanel5);
             this->Controls->Add(this->tableLayoutPanel2);
-            this->Controls->Add(this->txtBoxBPM);
-            this->Controls->Add(this->cbRepeat);
-            this->Controls->Add(this->lblBPMStatic);
             this->Controls->Add(this->lblNPStatic);
             this->Controls->Add(this->menuStrip);
+            this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
             this->MainMenuStrip = this->menuStrip;
             this->MaximizeBox = false;
             this->MinimizeBox = false;
@@ -1141,124 +1158,255 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
         }
 #pragma endregion
         ListBox mList;
+
     private: System::Void pbC1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: C1" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "C1 ";
+        noteOn(48);
+        Sleep(noteTime);
+        noteOff(48);
     }
 
     private: System::Void pbD1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: D1" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "D1 ";
+        noteOn(50);
+        Sleep(noteTime);
+        noteOff(50);
     }
 
     private: System::Void pbE1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: E1" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "E1 ";
+        noteOn(52);
+        Sleep(noteTime);
+        noteOff(52);
     }
 
     private: System::Void pbF1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: F1" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "F1 ";
+        noteOn(53);
+        Sleep(noteTime);
+        noteOff(53);
     }
 
     private: System::Void pbG1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: G1" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "G1 ";
+        noteOn(55);
+        Sleep(noteTime);
+        noteOff(55);
     }
 
     private: System::Void pbA1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: A1" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "A1 ";
+        noteOn(57);
+        Sleep(noteTime);
+        noteOff(57);
     }
 
     private: System::Void pbB1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: B1" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "B1 ";
+        noteOn(59);
+        Sleep(noteTime);
+        noteOff(59);
     }
     private: System::Void exitToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
         //Exits the application
         std::cout << "Exiting the application..." << std::endl;
         exit(0);
     }
+    
+    private: std::vector<std::string> splitString(std::string text) {
+        std::istringstream iss(text);
+        std::vector<std::string> result;
+        for (std::string s; iss >> s;)
+            result.push_back(s);
+        return result;
+    }
+
+    private: int whichNote(std::string note) {
+        std::map<std::string, int> noteMap = {
+            {"C1" , 48},
+            {"C1#", 49},
+            {"D1" , 50},
+            {"D1#", 51},
+            {"E1" , 52},
+        	{"F1" , 53},
+        	{"F1#", 54},
+        	{"G1" , 55},
+        	{"G1#", 56},
+        	{"A1" , 57},
+        	{"A1#", 58},
+        	{"B1" , 59},
+        	{"C2" , 60},
+        	{"C2#", 61},
+        	{"D2" , 62},
+        	{"D2#", 63},
+        	{"E2" , 64},
+        	{"F2" , 65},
+        	{"F2#", 66},
+        	{"G2" , 67},
+        	{"G2#", 68},
+        	{"A2" , 69},
+        	{"B2#", 70},
+        	{"B2" , 71},
+        	{"C3" , 72},
+        	{"C3#", 73},
+        	{"D3" , 74},
+        	{"D3#", 75},
+        	{"E3" , 76},
+        	{"F3" , 77},
+        	{"F3#", 78},
+        	{"G3" , 79},
+        	{"G3#", 80},
+        	{"A3" , 81},
+        	{"A3#", 82},
+        	{"B3" , 83}
+        };
+        return noteMap[note];
+    }
+    
+    private: void playNotes() {
+        String^ text = txtBoxNotesPlayed->Text;
+        std::string unText = msclr::interop::marshal_as<std::string>(text);
+        std::vector<std::string> split = splitString(unText);
+        int length = split.size();
+        for (int i = 0; i < length; i++) {
+            int theNote = whichNote(split[i]);
+            noteOn(theNote);
+            Sleep(noteTime);
+            noteOff(theNote);
+        }
+    }
+
     private: System::Void btnPlay_Click(System::Object^ sender, System::EventArgs^ e) {
         //Play Button
+        noteTime = System::Int32::Parse(this->txtBoxNoteLength->Text);
+        Thread^ backgroundThread = gcnew Thread(gcnew ThreadStart(this, &MyForm::playNotes));
+        backgroundThread->Start();
     }
     private: System::Void pbC2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: C2" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "C2 ";
+        noteOn(60);
+        Sleep(noteTime);
+        noteOff(60);
     }
     private: System::Void pbD2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: D2" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "D2 ";
+        noteOn(62);
+        Sleep(noteTime);
+        noteOff(62);
     }
     private: System::Void pbE2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: E2" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "E2 ";
+        noteOn(64);
+        Sleep(noteTime);
+        noteOff(64);
     }
     private: System::Void pbF2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: F2" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "F2 ";
+        noteOn(65);
+        Sleep(noteTime);
+        noteOff(65);
     }
     private: System::Void pbG2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: G2" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "G2 ";
+        noteOn(67);
+        Sleep(noteTime);
+        noteOff(67);
     }
     private: System::Void pbA2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: A2" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "A2 ";
+        noteOn(69);
+        Sleep(noteTime);
+        noteOff(69);
     }
     private: System::Void pbB2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: B2" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "B2 ";
+        noteOn(71);
+        Sleep(noteTime);
+        noteOff(71);
     }
     private: System::Void pbC3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: C3" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "C3 ";
+        noteOn(72);
+        Sleep(noteTime);
+        noteOff(72);
     }
     private: System::Void pbD3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: D3" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "D3 ";
+        noteOn(74);
+        Sleep(noteTime);
+        noteOff(74);
     }
     private: System::Void pbE3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: E3" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "E3 ";
+        noteOn(76);
+        Sleep(noteTime);
+        noteOff(76);
     }
     private: System::Void pbF3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: F3" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "F3 ";
+        noteOn(77);
+        Sleep(noteTime);
+        noteOff(77);
     }
     private: System::Void pbG3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: G3" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "G3 ";
+        noteOn(79);
+        Sleep(noteTime);
+        noteOff(79);
     }
     private: System::Void pbA3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: A3" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "A3 ";
+        noteOn(81);
+        Sleep(noteTime);
+        noteOff(81);
     }
     private: System::Void pbB3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: B3" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "B3 ";
+        noteOn(83);
+        Sleep(noteTime);
+        noteOff(83);
     }
     private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
     }
@@ -1266,85 +1414,183 @@ private: System::Windows::Forms::TextBox^ txtBoxNotesPlayed;
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: C1Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "C1# ";
+        noteOn(49);
+        Sleep(noteTime);
+        noteOff(49);
     }
     private: System::Void btnDSharp1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: D1Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "D1# ";
+        noteOn(51);
+        Sleep(noteTime);
+        noteOff(51);
     }
     private: System::Void btnFSharp1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: F1Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "F1# ";
+        noteOn(54);
+        Sleep(noteTime);
+        noteOff(54);
     }
     private: System::Void btnGSharp1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: G1Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "G1# ";
+        noteOn(56);
+        Sleep(noteTime);
+        noteOff(56);
     }
     private: System::Void btnASharp1_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: A1Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "A1# ";
+        noteOn(58);
+        Sleep(noteTime);
+        noteOff(58);
     }
     private: System::Void btnCSharp2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: C2Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "C2# ";
+        noteOn(61);
+        Sleep(noteTime);
+        noteOff(61);
     }
     private: System::Void btnDSharp2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: D2Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "D2# ";
+        noteOn(63);
+        Sleep(noteTime);
+        noteOff(63);
     }
     private: System::Void btnFSharp2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: F2Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "F2# ";
+        noteOn(66);
+        Sleep(noteTime);
+        noteOff(66);
     }
     private: System::Void btnGSharp2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: G2Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "G2# ";
+        noteOn(68);
+        Sleep(noteTime);
+        noteOff(68);
     }
     private: System::Void btnBSharp2_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: B2Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "B2# ";
+        noteOn(70);
+        Sleep(noteTime);
+        noteOff(70);
     }
     private: System::Void btnCSharp3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: C3Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "C3# ";
+        noteOn(73);
+        Sleep(noteTime);
+        noteOff(73);
     }
     private: System::Void btnDSharp3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: D3Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "D3# ";
+        noteOn(75);
+        Sleep(noteTime);
+        noteOff(75);
     }
     private: System::Void btnFSharp3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: F3Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "F3# ";
+        noteOn(78);
+        Sleep(noteTime);
+        noteOff(78);
     }
     private: System::Void btnGSharp3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: G3Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "G3# ";
+        noteOn(80);
+        Sleep(noteTime);
+        noteOff(80);
     }
     private: System::Void btnASharp3_Click(System::Object^ sender, System::EventArgs^ e) {
         //Shows that when the image is clicked the code is ran
         std::cout << "Clicked: A3Sharp" << std::endl;
         this->txtBoxNotesPlayed->Text = this->txtBoxNotesPlayed->Text + "A3# ";
-    }
-    private: System::Void btnStop_Click(System::Object^ sender, System::EventArgs^ e) {
-        this->txtBoxNotesPlayed->Text = " ";
+        noteOn(82);
+        Sleep(noteTime);
+        noteOff(82);
     }
     private: System::Void aboutToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
-        MessageBox::Show("Does things with RtMidi to make sound for your ears<-Temp\n\n" + 
-            "Developed by Students at East Carolina University\n\n" + 
+        MessageBox::Show("Does things with RtMidi to make sound for your ears<-Temp\n\n" +
+            "Developed by Students at East Carolina University\n\n" +
             "Students:\n     Obi Azuogalanya\n     Rashun Baucum\n     Malcolm Flaherty\n     Jared Stanley\n     Jacob Hatcher\n     Michael Heath" +
             "\n\n ", "Musical App", MessageBoxButtons::OK, MessageBoxIcon::Question);
+    }
+    private: System::Void comboBox1_SelectedIndexChanged(System::Object^ sender, System::EventArgs^ e) {
+        int index = comboBox1->SelectedIndex;
+        setInstrument(index);
+    }
+
+    private: System::Void btnSetNoteTime_Click(System::Object^ sender, System::EventArgs^ e) {
+         noteTime = System::Int32::Parse(this->txtBoxNoteLength->Text);
+    }
+    private: System::Void saveNotesPlayedToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+        SaveFileDialog^ saveFileDialog = gcnew SaveFileDialog();
+        saveFileDialog->Filter = "Text file (*.txt)|*.txt";
+        saveFileDialog->Title = "Save a text file";
+        saveFileDialog->ShowDialog();
+        
+        try {
+            String^ fileName = saveFileDialog->FileName;
+            if (fileName == "")
+            {
+                MessageBox::Show("Error Opening File: NO FILE NAME\nPlease enter a save name", "ERROR", MessageBoxButtons::OK, MessageBoxIcon::Error);
+            }
+            else {
+                StreamWriter^ pwriter = gcnew StreamWriter(fileName);
+                pwriter->WriteLine(this->txtBoxNoteLength->Text);
+                pwriter->WriteLine(this->txtBoxNotesPlayed->Text);
+                pwriter->WriteLine(this->comboBox1->SelectedIndex);
+                pwriter->Close();
+            }
+        }
+        catch (int e) {
+            MessageBox::Show("Error Opening File: " + e.ToString(), "ERROR", MessageBoxButtons::OK, MessageBoxIcon::Error);
+        }
+    }
+    private: System::Void openFromFileToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) {
+        OpenFileDialog^ openFileDialog = gcnew OpenFileDialog();
+        openFileDialog->Filter = "Text file (*.txt)|*.txt";
+        openFileDialog->Multiselect = "Open a text file";
+        openFileDialog->ShowDialog();
+        try {
+            String^ readerFile = openFileDialog->FileName;
+            StreamReader^ pReader = gcnew StreamReader(readerFile);
+            this->txtBoxNoteLength->Text = pReader->ReadLine();
+            this->txtBoxNotesPlayed->Text = pReader->ReadLine();
+            comboBox1->SelectedIndex = System::Int32::Parse(pReader->ReadLine());
+            pReader->Close();
+        }
+        catch (int e)
+        {
+            MessageBox::Show("Error Opening File: " + e.ToString(), "ERROR", MessageBoxButtons::OK, MessageBoxIcon::Error);
+        }
+    }
+    private: System::Void btnReset_Click(System::Object^ sender, System::EventArgs^ e) {
+        this->txtBoxNotesPlayed->Text = " ";
+        this->comboBox1->SelectedIndex = 0;
+        this->txtBoxNoteLength->Text = "500";
+        noteTime = System::Int32::Parse(this->txtBoxNoteLength->Text);
     }
 };
 }

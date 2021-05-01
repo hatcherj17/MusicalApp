@@ -17,3 +17,11 @@ Assembly System.Xml, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c5619
 Class Project2.MyForm: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
   :System.Windows.Forms.Form
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
+  Fields:
+    Int32 noteTime : Public
+  Methods:
+    initialize(): PrivateScope, Public, HideBySig
+    setInstrument(Int32): PrivateScope, Public, HideBySig
+    setVolume(Int32): PrivateScope, Public, HideBySig
+    noteOn(Int32): PrivateScope, Public, HideBySig
+    noteOff(Int32): PrivateScope, Public, HideBySig
